@@ -3,6 +3,7 @@
 # This class provides a checkfilecount plugin.
 #
 class icinga::plugins::checkfilecount (
+  $pkgname               = 'nagios-plugins-file-count-1.0-0',
   $check_warning         = '1',
   $check_critical        = '0',
   $target_folder         = undef,
@@ -13,6 +14,12 @@ class icinga::plugins::checkfilecount (
 ) inherits icinga {
 
   if $icinga::client {
+    if $::osfamily != 'Debian' {
+      package{$pkgname:
+        ensure => 'installed',
+      }
+    }
+
     file{"${::icinga::includedir_client}/check_file_count.cfg":
       ensure  => 'file',
       mode    => '0644',
